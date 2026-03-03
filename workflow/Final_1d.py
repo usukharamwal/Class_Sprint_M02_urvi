@@ -13,12 +13,6 @@ df = read_1d.copy()
 df["group"] = df["group"].astype(str).str.strip()
 df["value"] = pd.to_numeric(df["value"], errors="coerce")
 
-
-# Optional: consistent group order if present
-order = [g for g in ["control", "cases"] if g in df["group"].unique()]
-if not order:
-    order = sorted(df["group"].unique())
-
 plt.close("all")
 fig, ax = plt.subplots(figsize=(7, 4.5))
 sns.set_theme(style="whitegrid")
