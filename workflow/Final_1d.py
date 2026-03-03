@@ -2,8 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from pathlib import Path
 
 read_1d = pd.read_csv('data/1d-data.csv')
+
+# create figs directory if it doesn't exist
+Path("figs").mkdir(parents=True, exist_ok=True)
 
 df = read_1d.copy()
 df["group"] = df["group"].astype(str).str.strip()
