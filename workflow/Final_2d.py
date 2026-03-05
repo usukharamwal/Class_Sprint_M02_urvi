@@ -14,7 +14,7 @@ df["x"] = pd.to_numeric(df["x"], errors="coerce")
 df["y"] = pd.to_numeric(df["y"], errors="coerce")
 df = df.dropna(subset=["x", "y"])
 
-# --- Density Plot ---
+# Density Plot
 plt.close("all")
 fig, ax = plt.subplots(figsize=(6.5, 5))
 
