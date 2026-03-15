@@ -1,34 +1,61 @@
 # Notes: 1d-multi-method-data.csv
 
-## Data Structure
+## Dataset overview
+- Columns: `method`, `AUCROC`
+- Each method (Baselines + Proposed) has **multiple AUC-ROC measurements**.
 
-- **File:** `data/1d-multi-method-data.csv`
-- **Columns:** `method` (categorical), `AUCROC` (float, 0–1)
-- **Rows:** 100 total — 10 observations per method, 10 methods (1 "Proposed" + 9 baselines)
+## Before final visualization
+I summarized performance per method to understand the ranking before plotting:
+- `groupby('method').AUCROC.mean().sort_values(ascending=False)`
+- `groupby('method').AUCROC.median().sort_values(ascending=False)`
 
-## Key Observations
+### Mean AUC-ROC (descending)
+| Method      | Mean AUC-ROC |
+|-------------|--------------:|
+| Baseline_2  | 0.916858 |
+| Baseline_1  | 0.766974 |
+| Proposed    | 0.661321 |
+| Baseline_9  | 0.557234 |
+| Baseline_3  | 0.461854 |
+| Baseline_7  | 0.388454 |
+| Baseline_6  | 0.320925 |
+| Baseline_5  | 0.269172 |
+| Baseline_4  | 0.226200 |
+| Baseline_8  | 0.192495 |
 
-| Method     | Mean AUC-ROC | Rank |
-|------------|-------------|------|
-| Baseline_2 | 0.917       | 1st  |
-| Baseline_1 | 0.767       | 2nd  |
-| **Proposed** | **0.661** | **3rd** |
-| Baseline_9 | 0.557       | 4th  |
-| ...        | ...         | ...  |
-| Baseline_8 | 0.192       | 10th |
+### Median AUC-ROC (descending)
+| Method      | Median AUC-ROC |
+|-------------|----------------:|
+| Baseline_2  | 0.907718 |
+| Baseline_1  | 0.767523 |
+| Proposed    | 0.669363 |
+| Baseline_9  | 0.572660 |
+| Baseline_3  | 0.455904 |
+| Baseline_7  | 0.391778 |
+| Baseline_6  | 0.323728 |
+| Baseline_5  | 0.266379 |
+| Baseline_4  | 0.225000 |
+| Baseline_8  | 0.191516 |
 
-- "Proposed" ranks 3rd overall — better than 7 of 9 baselines
-- AUC-ROC values range from ~0.19 (Baseline_8) to ~0.92 (Baseline_2)
+**Key observation:** Proposed method ranks **3rd** by both mean and median, behind **Baseline 2 and 1**.
 
-## Visualization Strategy
+### Final visualization: Boxplot + jittered points (sorted by median)
+- Methods are **sorted by median AUC-ROC** to make ranking and gaps easy to see.
 
-- **Goal:** Highlight "Proposed" using preattentive encoding so it pops out immediately without cognitive effort
-- **Preattentive features used:**
-  - **Color**: Baselines in neutral gray; "Proposed" in a vivid contrasting color (e.g., orange/red)
-  - **Size**: Slightly larger markers for "Proposed"
-  - **Z-order**: "Proposed" drawn on top
-- **Chart type:** Strip plot (dot plot) with each method on x-axis, sorted by mean AUC-ROC
-  - Shows all 10 observations per method
-  - Avoids bar chart which would imply start-from-zero comparison
-- **Sorting:** Order methods by mean AUC-ROC so relative performance is clear at a glance
-- Label both axes; add a horizontal reference line or annotation for "Proposed"
+## Highlighting Proposed
+To highlight Proposed clearly without distorting the data:
+- Baselines are shown in **muted gray**
+- Proposed is shown in a **distinct color**
+- A **light vertical background band** is added behind Proposed
+- The **Proposed median** is directly annotated on the plot
+
+These cues draw attention immediately to Proposed while keeping the comparison fair.
+
+- The y-axis is fixed to **[0, 1]**, the valid range for AUC-ROC.
+- Raw points are included to avoid hiding sample size/outliers.
+
+- Proposed performs better than most baselines (Baselines 3–9) but remains below Baseline 1 and 2 based on both central tendency and visual distribution.
+
+## Output files
+- Figure: `figs/plot_MM.png`
+- Script: `workflow/Final_MM.py`
